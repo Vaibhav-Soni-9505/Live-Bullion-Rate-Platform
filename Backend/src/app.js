@@ -12,17 +12,17 @@ startGoldRateCache();
 
 const allowedOrigins = config.FRONTEND_URL
   ? config.FRONTEND_URL.split(",").map((origin) => origin.trim())
-  : [];
+  : ["*"];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests without an Origin header, such as Postman.
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow requests without an Origin header (e.g. mobile/tools) or wildcard
+      if (!origin || allowedOrigins.includes("*") || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error("Origin not allowed by CORS"));
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
     },
     methods: ["GET"],
   })
